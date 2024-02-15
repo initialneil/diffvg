@@ -1,3 +1,62 @@
+- Forked from: https://github.com/BachiLi/diffvg
+```
+git clone --recursive https://github.com/initialneil/diffvg.git
+cd diffvg
+
+# for Windows
+# only debug works
+# https://github.com/BachiLi/diffvg/issues/26#issuecomment-916625904
+python setup.py build --debug install
+
+# for Ubuntu/WSL2
+python setup.py install
+
+# test install success
+python -c "import diffvg"
+```
+
+
+- Fix for install on both Ubuntu and Windows with python3.9 in this repo:
+
+1. fix for `pthread` (Ubuntu)
+```
+# ref: https://stackoverflow.com/questions/53795731/undefined-reference-to-pthread-create-clion
+# in `CMakeLists.txt`:
+find_package(Threads REQUIRED)
+target_link_libraries(diffvg ${DYNAMIC_LOOKUP} Threads::Threads)
+```
+
+2. fix for `get_config_var('LIBDIR')` (Windows)
+```
+# ref: https://stackoverflow.com/questions/35071192/how-to-find-out-where-the-python-include-directory-is
+# in `setup.py`:
+from sysconfig import get_paths as gp
+LIBDIR = os.path.join(gp()['data'], 'libs').replace('\\', '/')
+print(f'-DPYTHON_LIBRARY={LIBDIR}')
+# replace get_config_var('LIBDIR') with LIBDIR
+```
+
+3. fix for `cannot find python39.lib` (Windows)
+```
+# in `CMakeLists.txt`:
+link_directories(${PYTHON_LIBRARY})
+```
+
+4. fix for `cast.h` (windows)
+```
+# ref: https://github.com/BachiLi/diffvg/issues/26#issuecomment-916625904
+# apply patch to pybind11
+# remove submodule link, make local
+```
+
+5. fix python version not from env
+```
+# ref: https://stackoverflow.com/a/75590691/3082081
+# use "find_package(Python3 ..." instead of "find_package(Python ..."
+```
+
+-----
+
 # diffvg
 Differentiable Rasterizer for Vector Graphics
 https://people.csail.mit.edu/tzumao/diffvg

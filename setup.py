@@ -35,8 +35,13 @@ class Build(build_ext):
             extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
             info = get_paths()
             include_path = info['include']
+            from sysconfig import get_paths as gp
+            LIBDIR = os.path.join(gp()['data'], 'libs').replace('\\', '/')
+            print(f'-DPYTHON_LIBRARY={LIBDIR}')
             cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
-                          '-DPYTHON_LIBRARY=' + get_config_var('LIBDIR'),
+                          #'-DPYTHON_LIBRARY=' + get_config_var('LIBDIR'),
+                          '-DPYTHON_LIBRARY=' + LIBDIR,
+                          '-DPYBIND11_FINDPYTHON=ON',
                           '-DPYTHON_INCLUDE_PATH=' + include_path]
 
             cfg = 'Debug' if self.debug else 'Release'
