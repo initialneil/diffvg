@@ -1,4 +1,6 @@
 - Forked from: https://github.com/BachiLi/diffvg
+- Fix for install on both Ubuntu and Windows with python3.9
+- Install:
 ```
 git clone --recursive https://github.com/initialneil/diffvg.git
 cd diffvg
@@ -15,8 +17,8 @@ python setup.py install
 python -c "import diffvg"
 ```
 
-
-- Fix for install on both Ubuntu and Windows with python3.9 in this repo:
+-----
+- Detailed fixes:
 
 1. fix for `pthread` (Ubuntu)
 ```
@@ -49,7 +51,7 @@ link_directories(${PYTHON_LIBRARY})
 # remove submodule link, make local
 ```
 
-5. fix python version not from env
+5. fix python version not from env (Windows)
 ```
 # ref: https://stackoverflow.com/a/75590691/3082081
 # use "find_package(Python3 ..." instead of "find_package(Python ..."
